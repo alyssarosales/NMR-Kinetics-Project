@@ -1,6 +1,15 @@
-import Image from "next/image";
+'use client';
+import SelectFile from "./components/SelectFile";
+/* import TextBox from "./components/TextBox"; */
+import DragDrop from "./components/DragDropFile"
+import { useState } from "react";
+import processZipFile, { Result } from "./lib/zipFileProcessor";
+import OptionConfigurator, { Options } from "./components/OptionConfigurator";
+import ResultArea from "./components/ResultArea";
+import { Dispatch, SetStateAction } from "react";
 
-export default function Home() {
+
+/* export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -110,4 +119,99 @@ export default function Home() {
       </div>
     </main>
   );
+}
+ */
+
+const defaultOptions: Options = {
+  option1: '',
+  option2: '',
+  option3: false,
+}
+
+export default function Home() {
+  const [result, setResult] = useState<Result>();
+
+  const [options, setOptions] = useState<Options>(defaultOptions);
+
+
+  const [zipFileURI, _setZipFileURI] = useState<string>('');
+
+  function setZipFileURI(newValue: SetStateAction<string>) {
+    setOptions(defaultOptions)
+    _setZipFileURI(newValue)
+  }
+
+
+  async function onGoButtonClicked() {
+    if (!zipFileURI) {
+      alert("No you can't do that")
+      return
+    }
+    const result = await processZipFile(zipFileURI, options)
+    setResult(result)
+
+  }
+
+  return (
+    <main className="h-screen flex-col bg-main-green">
+
+      <div id='AppTitle' className="w-full h-1/5 pt-5 text-center">
+        <h1>
+          <span className='font-display font-black text-4xl text-accent-yellow'>The Heller Group's</span>
+          <br />
+          <span className='font-display font-black text-6xl text-sky-blue leading-relaxed tracking-wide'>NMR Kinetics Tool</span>
+        </h1>
+      </div>
+
+      <div id='SubmissionContainer' className="w-full h-3/5 flex justify-center">
+
+        <div className='w-2/5 h-full bg-sky-blue rounded'>
+          <p className="font-body">This is the content of my page</p>
+
+          <div id='DragDrop Box' className='w-3/5 h-2/5 bg-main-green'>
+
+          </div>
+
+          {/*           <div id='SelectFile'>
+            <input type='file'/>
+          </div> */}
+
+          <div id='TextBox'>
+            <input type='text' />
+          </div>
+
+          <button id='Submit' className='rounded-lg border-2 border-main-green bg-accent-yellow'> Submit</button>
+        </div>
+      </div>
+
+      <DragDrop onFileReceived={setZipFileURI} />
+      <div>
+        do we have a file? {zipFileURI ? 'yes' : 'no'}
+      </div>
+
+      {zipFileURI && <>
+
+        <OptionConfigurator options={options} setOptions={setOptions} />
+
+        <button
+          onClick={onGoButtonClicked}
+          disabled={!zipFileURI}
+          className="rounded-none border-1 bg-accent-yellow">go!</button>
+      </>
+      }
+
+
+      {result &&
+        <ResultArea result={result} />
+      }
+
+
+      {/* <TextBox/> */}
+
+
+      <footer>
+        This is my footer
+      </footer>
+    </main>
+  )
 }

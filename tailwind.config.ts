@@ -7,17 +7,23 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    colors: {
-      'main-green': '#074040',
-      'accent-yellow': '#F2E641',
-      transparent: 'transparent',
-      'sky-blue': '#A0E3F2',
+    extend: {
+      colors: {
+        'main-green': '#074040',
+        'accent-yellow': '#F2E641',
+        transparent: 'transparent',
+        'sky-blue': '#A0E3F2',
+      },
     },
     fontFamily: {
-      'display': ['Montserrat'],
+      'display': ['Raleway'],
       'body': ['Roboto'],
     },
   },
+
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 };
 
 export default config;

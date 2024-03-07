@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Montserrat, Roboto } from "next/font/google";
+import { Inter, Montserrat, Roboto, Raleway } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const raleway = Raleway({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '900'],
+  style: ['normal', 'italic'],
+});
 
 export const montserrat = Montserrat({ 
   subsets: ['latin'], 

@@ -1,7 +1,13 @@
+'use client';
+
+import { useState } from "react";
+import { ExtractOutput, extract } from "./lib/extractor";
+
+
 function ChooseFileButton() {
     return <>
         <div className= 'flex-1'>
-            <input type="file" className="block w-full text-sm text-white
+            <input name="file" type="file" className="block w-full text-sm text-white
             file:mr-4 file:py-5 file:px-5
             file:rounded-lg file:border-0
             file:text-sm file:font-semibold
@@ -18,6 +24,7 @@ function TextInput() {
             <label htmlFor='notes' className='font-raleway font-semibold'>Additional Notes</label>
             <textarea
                 id = 'notes'
+                name = 'notes'
                 className='block min-h-64 w-full rounded-lg resize-none border-none border-2 border-white bg-[#171717]  focus:ring-[#555CF0] focus:ring-inset focus:ring-4'
             />
         </div>
@@ -28,6 +35,7 @@ function TimeInput() {
     return <>
         <div className='flex'>
             <input
+                name = 'time'
                 type='time'
                 className='border-none bg-[#171717] block rounded-lg form-input font-raleway focus:ring-[#555CF0] focus:ring-inset focus:ring-2'
             />
@@ -39,6 +47,7 @@ function DateInput() {
     return<>
         <div className='flex'>
             <input
+            name = 'date'
             type='date'
                 className='border-none bg-[#171717] block rounded-lg font-raleway  focus:ring-[#555CF0] focus:ring-inset focus:ring-2'
             />
@@ -47,6 +56,32 @@ function DateInput() {
 }
 
 export default function MainPage() {
+
+    const [extractedOutput, setExtractedOutput]   = useState<ExtractOutput>()
+
+    async function submitAction(formData: FormData) {
+        const file = formData.get('file') as File;
+        const time = formData.get('time') as string;
+        const date = formData.get('date') as string;
+        const notes = formData.get('notes') as string;
+        
+    
+        // TODO: use date and time to get a datetime variable https://www.google.com/search?q=javascript+date+parsing
+        const datetime: Date = new Date();
+         
+    
+        console.log("Submitted! args: ", {
+            file, 
+            datetime,
+            notes,
+        })
+        const extractOutput = await extract(file, datetime, notes)
+        console.log("output:", extractOutput)
+        setExtractedOutput(extractOutput)
+    }
+    
+
+
     return(
         <div className="h-screen flex flex-col space-y-10 bg-[#171717] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:48px_48px]">
             <header className="flex flex-col p-10">
@@ -66,7 +101,7 @@ export default function MainPage() {
 
                     <div className='flex w-2/3 rounded-lg justify-center'>
 
-                        <form className='flex flex-col w-2/3 place-content-center space-y-5'>
+                        <form className='flex flex-col w-2/3 place-content-center space-y-5' action={submitAction}>
                             <ChooseFileButton />
 
                             <label htmlFor='reactiontime' className='font-raleway font-semibold'>Reaction Start Time</label>
@@ -78,6 +113,14 @@ export default function MainPage() {
                             <TextInput/>
                             <input className= 'font-raleway font-bold bg-[#36CE7D] rounded-lg cursor-pointer w-1/3 hover:bg-[#36CE7D]/75' type='submit' value='Continue'/>
                         </form>
+
+                        {/* div that appears based on state */}
+                        {!!extractedOutput &&
+                            <div className="bg-red-500 min-w-5">
+                                remy's notes: {extractedOutput.notes}<br/>
+                                remy's full output: <pre>{JSON.stringify(extractedOutput, null, 2)}</pre>
+                            </div>
+                        }
 
                     </div>
 

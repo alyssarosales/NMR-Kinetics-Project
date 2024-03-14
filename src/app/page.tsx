@@ -66,16 +66,16 @@ export default function MainPage() {
         const notes = formData.get('notes') as string;
         
     
-        // TODO: use date and time to get a datetime variable https://www.google.com/search?q=javascript+date+parsing
-        const datetime: Date = new Date();
-         
+        const dateTimeStr = date.concat("T", time);
+        const startTime = new Date(Date.parse(dateTimeStr));
+        
     
-        console.log("Submitted! args: ", {
+        console.debug("Submitted! args: ", {
             file, 
-            datetime,
+            startTime,
             notes,
         })
-        const extractOutput = await extract(file, datetime, notes)
+        const extractOutput = await extract(file, startTime, notes)
         console.log("output:", extractOutput)
         setExtractedOutput(extractOutput)
     }

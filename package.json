@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@zip.js/zip.js": "^2.7.34",
+    "date-fns": "^3.4.0",
     "exceljs": "^4.4.0",
     "next": "14.1.0",
     "react": "^18.2.0",

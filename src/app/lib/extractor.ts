@@ -1,5 +1,5 @@
 import { BlobReader, ZipReader, TextWriter } from "@zip.js/zip.js";
-import { parse } from 'date-fns'
+import { differenceInMilliseconds, formatDuration, intervalToDuration, millisecondsToHours, millisecondsToMinutes, parse } from 'date-fns';
 
 
 export type ExtractOutput = {
@@ -7,7 +7,7 @@ export type ExtractOutput = {
         integratedRegion: [number, number],
         integral: number,
     }[],
-    reactionTimeMs: number,
+    reactionDuration: number,
     notes: string,
 };
 
@@ -59,7 +59,7 @@ function getEndTimeFromParmText(parmText: string) {
     return endTime
 }
 
-function processIntegralsText(integralsText: string) {
+function processIntegralsText(integralsText: string): ExtractOutput['integrations'] {
     const lines = integralsText.split('\n');
 
     // First, remove all of the lines up to and including "Number Integrated..."
@@ -71,45 +71,48 @@ function processIntegralsText(integralsText: string) {
         if (line.trim().startsWith('Number')) {
             break
         }
+
     }
+    console.log(lines);
 
-    // Next, parse the numbers
-    // TODO: Parse these numbers, compute "answer" (see below for example of what answer should look like). It may be helpful to convert to an array like "numbersArray" first, but that's not required.
-    const numbersArray = [
-        [1, 15.690, 15.224, 1.0],
-        [2, 5.605, 5.380, 1.11475],
-        [3, 3.774, 3.501, 0.39266]
-    ]
+    const integralArray: number[][] = new Array();
+    for (let line of lines) {
+        if (line.length == 0) {
+            continue
+        }
+        integralArray.push(line.trim().split(/\s+/).map(Number));
+    }
+    console.log('integralArray:', integralArray);
 
 
-    // TODO: Once you're computing "answer", replace this with your value
-    const answer: ExtractOutput['integrations'] = [
-        {integratedRegion: [15.690, 15.224], integral: 1.0},
-        {integratedRegion: [5.605, 5.380], integral: 1.11475},
-        {integratedRegion: [3.774, 3.501], integral: 0.39266},
-    ]
+    const peakArray = integralArray.map(peak => ({
+        peakNumber: peak[0],
+        integratedRegion: [peak[1], peak[2]] as [number, number],
+        integral: peak[3],
+    }))
 
-    return answer;
+    console.log('peakArray:', peakArray);
 
+    return peakArray;
 }
 
 export async function extract(file: File, startTime: Date, notes: string): Promise<ExtractOutput> {
     const { integrationText, parmText } = await getFileContents(file);
 
-    const  endTime  = getEndTimeFromParmText(parmText)
+    const endTime = getEndTimeFromParmText(parmText)
     console.log("endTime", endTime)
 
 
     const integrations = processIntegralsText(integrationText)
     console.log('integrals', integrations)
 
-
-    // TODO: compute reactionTimeMs ( https://date-fns.org/v3.4.0/docs/differenceInMilliseconds )
-    const reactionTimeMs = 1234;
+    const reactionTimeMs = differenceInMilliseconds(endTime, startTime)
+    const reactionDuration = millisecondsToMinutes(reactionTimeMs)
+    console.log(reactionDuration);
 
     return {
         integrations,
-        reactionTimeMs,
+        reactionDuration,
         notes,
     }
 

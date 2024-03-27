@@ -9,6 +9,7 @@ export type ExtractOutput = {
     }[],
     reactionDuration: number,
     notes: string,
+    title: string,
 };
 
 async function getFileContents(file: File) {
@@ -96,7 +97,7 @@ function processIntegralsText(integralsText: string): ExtractOutput['integration
     return peakArray;
 }
 
-export async function extract(file: File, startTime: Date, notes: string): Promise<ExtractOutput> {
+export async function extract(file: File, startTime: Date, notes: string, title:string): Promise<ExtractOutput> {
     const { integrationText, parmText } = await getFileContents(file);
 
     const endTime = getEndTimeFromParmText(parmText)
@@ -114,6 +115,7 @@ export async function extract(file: File, startTime: Date, notes: string): Promi
         integrations,
         reactionDuration,
         notes,
+        title,
     }
 
 }

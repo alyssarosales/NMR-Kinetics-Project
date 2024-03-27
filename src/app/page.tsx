@@ -6,6 +6,7 @@ import FormUnsubmitted, { ResetRef } from "./components/FormUnsubmitted";
 import { ExtractOutput, extract } from "./lib/extractor";
 
 
+
 export default function MainPage() {
 
     const [extractedOutput, setExtractedOutput] = useState<ExtractOutput | null>(null)
@@ -25,6 +26,7 @@ export default function MainPage() {
         const time = formData.get('time') as string;
         const date = formData.get('date') as string;
         const notes = formData.get('notes') as string;
+        const title = formData.get('title') as string;
 
 
         const dateTimeStr = date.concat("T", time);
@@ -35,8 +37,9 @@ export default function MainPage() {
             file,
             startTime,
             notes,
+            title,
         })
-        const extractOutput = await extract(file, startTime, notes)
+        const extractOutput = await extract(file, startTime, notes, title)
         console.log("output:", extractOutput)
         setExtractedOutput(extractOutput)
     }

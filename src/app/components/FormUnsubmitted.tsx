@@ -9,7 +9,18 @@ function ChooseFileButton() {
             file:text-sm file:font-semibold
             file:bg-[#555CF0] file:text-white
             hover:file:bg-[#555CF0]/75 file:cursor-pointer
-            "/>
+            " 
+            required/>
+        </div>
+    </>
+}
+
+function TitleInput() {
+    return <>
+        <div className = 'flex-col'>
+            <label htmlFor='title' className = 'font-raleway font-semibold'>Reaction Title</label>
+            <textarea id='title' name = 'title' className ='block max-h-10 rounded-lg resize-none border-none border-2 border-white bg-[#171717] focus:ring-inset focus:ring-4 focus:ring-[#555CF0]'
+            />
         </div>
     </>
 }
@@ -22,7 +33,7 @@ function TextInput() {
                 id='notes'
                 name='notes'
                 className='block min-h-64 w-full rounded-lg resize-none border-none border-2 border-white bg-[#171717]  focus:ring-[#555CF0] focus:ring-inset focus:ring-4'
-            />
+           />
         </div>
     </>
 }
@@ -34,7 +45,8 @@ function TimeInput() {
                 name='time'
                 type='time'
                 className='border-none bg-[#171717] block rounded-lg form-input font-raleway focus:ring-[#555CF0] focus:ring-inset focus:ring-2'
-            />
+                required
+           />
         </div>
     </>
 }
@@ -45,11 +57,14 @@ function DateInput() {
             <input
                 name='date'
                 type='date'
-                className='border-none bg-[#171717] block rounded-lg font-raleway  focus:ring-[#555CF0] focus:ring-inset focus:ring-2'
-            />
+                className='border-none bg-[#171717] block rounded-lg font-raleway focus:ring-[#555CF0] focus:ring-inset focus:ring-2'
+                required
+           />
         </div>
     </>
 }
+
+
 
 export type ResetRef = { resetForm: () => void; }
 
@@ -86,7 +101,7 @@ export default function FormUnsubmitted({
 
                 <form className='flex flex-col flex-wrap space-y-5' action={submitAction} ref={formRef}>
                     <ChooseFileButton />
-
+                    <TitleInput/>
                     <label htmlFor='reactiontime' className='font-raleway font-semibold'>Reaction Start Time</label>
                     <div id='reactiontime' className='flex flex-row space-x-2'>
                         <DateInput />

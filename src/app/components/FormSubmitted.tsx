@@ -49,14 +49,6 @@ export default function FormSubmitted({
 
 
     async function onCopyClick() {
-        // var string, integrationTableText = document.getElementById("integrationTableData").innerText
-
-        // const element = document.getElementById("integrationTableData");
-        // if (!element) {
-        //     throw new Error("Could not get element for some reason idk")
-        // }
-        // const integrationTableText = element.innerText
-        // await navigator.clipboard.writeText(integrationTableText)
 
         const element = tableRef.current;
         if (!element) {

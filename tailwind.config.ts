@@ -16,8 +16,9 @@ const config: Config = {
       },
     },
     fontFamily: {
-      'display': ['Raleway'],
-      'body': ['Roboto'],
+      'display': ['var(--font-raleway)'],
+      'body': ['var(--font-raleway)'],
+      'raleway': ['var(--font-raleway)'],
     },
   },
 
